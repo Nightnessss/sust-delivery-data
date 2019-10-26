@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fehead.sustdelivery.dao.OrderDOMapper">
+    <!--修改订单状态-->
+    <insert id="updateStatus" parameterType="com.fehead.sustdelivery.dataobject.OrderStatusDO">
+        update `order_status` set status=#{status},update_time=#{updateTime} where order_id=#{orderId}
+    </insert>
+
+    <!--修改订单状态为已接-->
+    <insert id="updateStatus2" parameterType="com.fehead.sustdelivery.dataobject.OrderStatusDO">
+        update `order_status` set status=#{status},receiver_id=#{receiverId},update_time=#{updateTime}  where order_id=#{orderId}
+    </insert>
+</mapper>

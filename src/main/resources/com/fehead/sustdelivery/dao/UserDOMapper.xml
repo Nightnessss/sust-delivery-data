@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fehead.sustdelivery.dao.UserDOMapper">
+    <!--查询所有订单-->
+    <select id="selectOrder" resultType="com.fehead.sustdelivery.dataobject.OrderDO">
+        select  id,update_time updateTime,deadline,destination,delivery_point_id deliveryPointId,
+        type,fee,remark,pick_code pickCode,pick_name pickName,tail_number tailNumber
+        from `order`
+    </select>
+    <!--查询所有订单状态-->
+    <select id="selectStatus" resultType="com.fehead.sustdelivery.dataobject.OrderStatusDO">
+        select id,order_id orderId,status,update_time updateTime,publisher_id publisherId,receiver_id receiverId
+        from `order_status`
+    </select>
+    <!--查询所有用户-->
+    <select id="selectUser" resultType="com.fehead.sustdelivery.dataobject.UserDO">
+        select id,telphone,email,register_mode registerMode,third_party_id thirdPartyId,avatar,display_name displayName
+        from `user_info`
+    </select>
+    <!--通过用户Id查找用户-->
+    <select id="selectUserById" parameterType="Integer" resultType="com.fehead.sustdelivery.dataobject.UserDO">
+        select id,telphone,email,register_mode registerMode,third_party_id thirdPartyId,avatar,display_name displayName
+        from `user_info` where id=#{id}
+    </select>
+    <!--查询所有快递点信息-->
+    <select id="selectDeliveryPoint" resultType="com.fehead.sustdelivery.dataobject.DeliveryPointDO">
+        select id,delivery_point deliveryPoint,area from `delivery_point`
+    </select>
+    <!--通过用户id查询已接订单-->
+    <select id="selectReceiverOrder" parameterType="Integer" resultType="com.fehead.sustdelivery.dataobject.OrderDO">
+        select order.id,order.update_time updateTime,deadline,destination,delivery_point_id deliveryPointId,
+        type,fee,remark,pick_code pickCode,pick_name pickName,tail_number tailNumber
+        from `order`,`order_status`
+        where order_status.receiver_id=#{id} and order_status.order_id=order.id
+    </select>
+    <!--通过用户id查询已发订单-->
+    <select id="selectPublishOrder" parameterType="Integer" resultType="com.fehead.sustdelivery.dataobject.OrderDO">
+        select order.id,order.update_time updateTime,deadline,destination,delivery_point_id deliveryPointId,
+        type,fee,remark,pick_code pickCode,pick_name pickName,tail_number tailNumber
+        from `order`,`order_status`
+        where order_status.publisher_id=#{id} and order_status.order_id=order.id
+    </select>
+    <!--发布订单-->
+    <insert id="commitOrder" keyProperty="id" useGeneratedKeys="true" parameterType="com.fehead.sustdelivery.dataobject.OrderDO">
+        <selectKey keyColumn="id" keyProperty="id" resultType="int" order="AFTER">
+            select last_insert_id();
+        </selectKey>
+        insert into `order` (update_time,deadline,destination,delivery_point_id,type,
+        fee,remark,pick_code,pick_name,tail_number)
+        values(#{updateTime},#{deadline},#{destination},#{deliveryPointId},#{type},
+        #{fee},#{remark},#{pickCode},#{pickName},#{tailNumber})
+    </insert>
+    <!--插入订单到状态表-->
+    <insert id="insertOrderStatus" keyProperty="id" useGeneratedKeys="true" parameterType="com.fehead.sustdelivery.dataobject.OrderStatusDO">
+        insert into `order_status`(order_id,status,update_time,publisher_id)
+        values(#{orderId},1,#{updateTime},#{publisherId})
+    </insert>
+
+    <!--插入用户到用户表-->
+    <insert id="insertUserInfo" keyProperty="id" useGeneratedKeys="true" parameterType="com.fehead.sustdelivery.dataobject.UserDO">
+        insert into `user_info`(telphone,email,register_mode,third_party_id,avatar,display_name)
+        values(#{telphone},#{email},#{registerMode},#{thirdPartyId},#{avatar},#{displayName})
+    </insert>
+
+    <!--更新订单-->
+    <insert id="updateOrder" parameterType="com.fehead.sustdelivery.dataobject.OrderDO">
+        update `order` set update_time=#{updateTime},deadline=#{deadline},destination=#{destination},
+        delivery_point_id=#{deliveryPointId},type=#{type},fee=#{fee},remark=#{remark},pick_code=#{pickCode},
+        pick_name=#{pickName},tail_number=#{tailNumber}
+        where id=#{id}
+    </insert>
+    <!--更新订单状态表-->
+    <insert id="updateOrderStatus" parameterType="com.fehead.sustdelivery.dataobject.OrderStatusDO">
+        update `order_status` set update_time=#{updateTime}
+        where order_status.id=#{id}
+    </insert>
+    <!--更新用户信息-->
+    <insert id="updateUserInfo" parameterType="com.fehead.sustdelivery.dataobject.UserDO">
+        update `user_info` set telphone=#{telphone}, email=#{email}
+        where third_party_id=#{thirdPartyId}
+    </insert>
+    <!--通过订单id查找订单-->
+    <select id="selectOrderById" parameterType="Integer" resultType="com.fehead.sustdelivery.dataobject.OrderDO">
+        select id,update_time updateTime,deadline,destination,delivery_point_id deliveryPointId,
+        type,fee,remark,pick_code pickCode,pick_name pickName,tail_number tailNumber
+        from `order`
+        where id=#{id}
+    </select>
+
+    <!--通过订单id查找订单状态-->
+    <select id="selectOrderStatusById" parameterType="Integer" resultType="com.fehead.sustdelivery.dataobject.OrderStatusDO">
+        select id, order_id orderId,status,update_time updateTime,publisher_id publisherId,receiver_id receiverId
+        from order_status
+        where order_id = #{id}
+    </select>
+
+    <!--通过快递点id查找快递点详细信息-->
+    <select id="selectDeliveryPointById" parameterType="Integer" resultType="com.fehead.sustdelivery.dataobject.DeliveryPointDO">
+        select id,delivery_point deliveryPoint,area from `delivery_point`
+        where id=#{id}
+    </select>
+
+    <!--查找所有可接订单-->
+    <select id="selectAcceptableOrder" resultType="com.fehead.sustdelivery.dataobject.OrderDO">
+        select  order.id,order.update_time updateTime,deadline,destination,delivery_point_id deliveryPointId,
+        type,fee,remark,pick_code pickCode,pick_name pickName,tail_number tailNumber
+        from `order`,`order_status`
+        where order.id = order_status.order_id and status = 1
+    </select>
+    <!--根据快递点查找可接订单-->
+    <select id="selectAcceptableOrderByPoint" parameterType="Integer" resultType="com.fehead.sustdelivery.dataobject.OrderDO">
+        select  order.id,order.update_time updateTime,deadline,destination,delivery_point_id deliveryPointId,
+        type,fee,remark,pick_code pickCode,pick_name pickName,tail_number tailNumber
+        from `order`,`order_status`
+        where order.id = order_status.order_id and status = 1 and order.delivery_point_id = #{point}
+    </select>
+    <!--根据目的地模糊查找可接订单-->
+    <select id="selectAcceptableOrderByDestination" parameterType="String" resultType="com.fehead.sustdelivery.dataobject.OrderDO">
+        select  order.id,order.update_time updateTime,deadline,destination,delivery_point_id deliveryPointId,
+        type,fee,remark,pick_code pickCode,pick_name pickName,tail_number tailNumber
+        from `order`,`order_status`
+        where order.id = order_status.order_id and status = 1 and order.destination LIKE "%"#{destination, jdbcType=VARCHAR}"%"
+    </select>
+    <!--通锅第三方id查找用户-->
+    <select id="selectUserByThirdPartyId" resultType="com.fehead.sustdelivery.dataobject.UserDO">
+        select id,telphone,email,register_mode registerMode,third_party_id thirdPartyId,avatar,display_name displayName
+        from `user_info`
+        where third_party_id=#{thirdPartyId}
+    </select>
+
+</mapper>
