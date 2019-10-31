@@ -1,5 +1,6 @@
 package com.fehead.sustdelivery.service;
 
+import com.fehead.sustdelivery.error.BusinessException;
 import com.fehead.sustdelivery.model.OrderModel;
 import com.fehead.sustdelivery.model.StatusModel;
 
@@ -16,5 +17,5 @@ public interface OrderService {
      */
     public void updateStatus(OrderModel orderModel);
 
-    public void updateStatus2(OrderModel orderModel);
+    public void updateStatus2(OrderModel orderModel) throws BusinessException;
 }

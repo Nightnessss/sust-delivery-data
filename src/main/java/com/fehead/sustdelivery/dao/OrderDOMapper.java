@@ -20,5 +20,12 @@ public interface OrderDOMapper {
      */
     void updateStatus2(OrderStatusDO orderStatusDO);
 
+    /**
+     * 根据id获取订单信息
+     * @param id
+     */
+    void selectOrderById(int id);
+
+
 
 }

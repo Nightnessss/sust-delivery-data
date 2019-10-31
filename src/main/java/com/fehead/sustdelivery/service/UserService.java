@@ -49,6 +49,21 @@ public interface UserService {
     public List<OrderModel> selectAcceptableOrder(int point);
 
     /**
+     * 字符串查找订单
+     * @param search
+     * @return
+     */
+    public List<OrderModel> selectAcceptableOrderByDestination(String search);
+
+
+    /**
+     * 查询所有快递点
+     * @return
+     */
+    public List<DeliveryPointModel> selectAllDeliveryPoint();
+
+
+    /**
      * 通过快递点id查找快递点详细信息
      */
     public DeliveryPointModel selectDeliveryPointById(Integer id);

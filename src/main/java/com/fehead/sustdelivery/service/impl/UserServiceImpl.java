@@ -309,6 +309,75 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<OrderModel> selectAcceptableOrderByDestination(String search) {
+        List<OrderModel> orderModelList = new ArrayList<>();
+        List<OrderDO> orderDOList = userDOMapper.selectAcceptableOrderByDestination(search);
+
+//        List<DeliveryPointDO> deliveryPointDOList = userDOMapper.selectDeliveryPoint();
+//        List<UserDO> userDOList = userDOMapper.selectUser();
+//        List<OrderStatusDO> orderStatusDOList = userDOMapper.selectStatus();
+
+        for(OrderDO orderDO:orderDOList){
+            OrderModel orderModel = new OrderModel();
+            if(orderDO != null){
+                BeanUtils.copyProperties(orderDO,orderModel);
+            }
+            StatusModel statusModel = new StatusModel();
+            OrderStatusDO orderStatusDO = userDOMapper.selectOrderStatusById(orderDO.getId());
+            if(orderStatusDO != null){
+                BeanUtils.copyProperties(orderStatusDO,statusModel);
+            }
+
+            orderModel.setStatus(statusModel);
+
+            DeliveryPointDO deliveryPointDO =userDOMapper.selectDeliveryPointById(orderDO.getDeliveryPointId());
+            DeliveryPointModel deliveryPointModel = new DeliveryPointModel();
+            if(deliveryPointDO != null){
+                BeanUtils.copyProperties(deliveryPointDO,deliveryPointModel);
+            }
+            orderModel.setDeliveryPoint(deliveryPointModel);
+
+            UserDO userDO = userDOMapper.selectUserById(orderStatusDO.getPublisherId());
+            UserModel userModel = new UserModel();
+            if(userDO != null){
+                BeanUtils.copyProperties(userDO,userModel);
+            }
+            orderModel.setPublisher(userModel);
+
+            userDO = userDOMapper.selectUserById(orderStatusDO.getReceiverId());
+            userModel = new UserModel();
+            if (userDO != null) {
+                BeanUtils.copyProperties(userDO,userModel);
+            }
+            orderModel.setReceiver(userModel);
+
+            PickModel pickModel = new PickModel();
+            pickModel.setPickCode(orderDO.getPickCode());
+            pickModel.setPickName(orderDO.getPickName());
+            pickModel.setTailNumber(orderDO.getTailNumber());
+            orderModel.setPick(pickModel);
+
+            orderModelList.add(orderModel);
+        }
+
+        return orderModelList;
+    }
+
+    @Override
+    public List<DeliveryPointModel> selectAllDeliveryPoint() {
+
+        List<DeliveryPointModel> deliveryPointModels = new ArrayList<>();
+
+        List<DeliveryPointDO> deliveryPointDOS = userDOMapper.selectDeliveryPoint();
+        for (DeliveryPointDO deliveryPointDO:deliveryPointDOS) {
+            DeliveryPointModel deliveryPointModel = new DeliveryPointModel();
+            BeanUtils.copyProperties(deliveryPointDO,deliveryPointModel);
+            deliveryPointModels.add(deliveryPointModel);
+        }
+        return deliveryPointModels;
+    }
+
+    @Override
     public DeliveryPointModel selectDeliveryPointById(Integer id) {
         DeliveryPointModel deliveryPointModel = new DeliveryPointModel();
         DeliveryPointDO deliveryPointDO = userDOMapper.selectDeliveryPointById(id);

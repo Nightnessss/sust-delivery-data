@@ -56,4 +56,27 @@ public class OrderTest {
 
         System.out.println(result);
     }
+
+    @Test
+    public void whenGetAcceptableOrderByDestinationSuccess() throws Exception{
+        String result = mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1.0/SUSTDelivery/data/order/lists")
+                .param("search", "d")
+                .param("page", "1")
+                .param("pagesize", "5"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println(result);
+    }
+
+    @Test
+    public void whenGetAllDeliveryPointSuccess() throws Exception{
+        String result = mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1.0/SUSTDelivery/data/order/lists/delivery"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println(result);
+    }
 }

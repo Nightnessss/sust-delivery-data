@@ -9,10 +9,7 @@ import com.fehead.sustdelivery.service.OrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -56,8 +53,8 @@ public class OrderController extends  BaseController{
     }
 
     //修改订单为2(接单)状态
-    @PutMapping("/user/{id}/order/{order_id}")
-    public void updateStatus2(@PathVariable ("id") Integer userId,
+    @GetMapping("/user/{id}/order/{order_id}")
+    public boolean updateStatus2(@PathVariable ("id") Integer userId,
                               @PathVariable("order_id") Integer orderId) throws BusinessException {
 
         logger.info("PARAM: 参数名:"+orderId);
@@ -71,6 +68,9 @@ public class OrderController extends  BaseController{
         UserModel receiver = new UserModel();
         receiver.setId(userId);
         orderModel.setReceiver(receiver);
+//        if (orderModel.getPublisher() == orderModel.getReceiver()) {
+//            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "接单者不能是发单者");
+//        }
         if(userId > 0 && orderId >0){
             orderService.updateStatus2(orderModel);
             logger.info("SUCCESS :updateStatus2");
@@ -79,6 +79,6 @@ public class OrderController extends  BaseController{
             throw new BusinessException(EmBusinessError.DATA_UPDATE_ERROR);
         }
 
-
+        return true;
     }
 }

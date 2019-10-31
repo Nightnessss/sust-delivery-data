@@ -54,7 +54,7 @@ public class UserDOMapperTest {
     @Test
     public void whenSelectAcceptableOrderByDestinationSuccess() {
 
-        final List<OrderDO> list = userDOMapper.selectAcceptableOrderByDestination("D");
+        final List<OrderDO> list = userDOMapper.selectAcceptableOrderByDestination("");
 
         list.forEach(value-> System.out.println(value));
     }

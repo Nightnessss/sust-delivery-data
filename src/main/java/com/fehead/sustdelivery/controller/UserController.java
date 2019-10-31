@@ -87,6 +87,17 @@ public class UserController extends BaseController{
         return userService.selectAcceptableOrder(point);
     }
 
+
+    @PostMapping("/order/lists")
+    public List<OrderModel> getAcceptableOrderByDestination(@RequestParam("search") String search,
+                                                            @RequestParam("page") Integer page,
+                                                            @RequestParam("pagesize") Integer pagesize) {
+        logger.debug("PARAM: search "+search);
+
+        PageHelper.startPage(page,pagesize);
+        return userService.selectAcceptableOrderByDestination(search);
+    }
+
     /**
      * 通过用户Id查找已发订单
      */
@@ -126,6 +137,15 @@ public class UserController extends BaseController{
         }
 
     }
+
+
+    @GetMapping("/order/lists/delivery")
+    public List<DeliveryPointModel> getAllDeliveryPoint() {
+
+        return userService.selectAllDeliveryPoint();
+
+    }
+
 
     /**
      * 通过快递点id查找快递点
