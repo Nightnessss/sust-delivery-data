@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.beans.beancontext.BeanContext;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -299,8 +300,9 @@ public class UserServiceImpl implements UserService {
             pickModel.setPickName(orderDO.getPickName());
             pickModel.setTailNumber(orderDO.getTailNumber());
             orderModel.setPick(pickModel);
-
-            orderModelList.add(orderModel);
+            if (orderModel.getDeadline().after(new Date())) {
+                orderModelList.add(orderModel);
+            }
         }
 
 
@@ -357,7 +359,9 @@ public class UserServiceImpl implements UserService {
             pickModel.setTailNumber(orderDO.getTailNumber());
             orderModel.setPick(pickModel);
 
-            orderModelList.add(orderModel);
+            if (orderModel.getDeadline().after(new Date())) {
+                orderModelList.add(orderModel);
+            }
         }
 
         return orderModelList;

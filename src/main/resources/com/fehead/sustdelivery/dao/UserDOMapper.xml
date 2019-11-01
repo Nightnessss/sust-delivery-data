@@ -107,14 +107,14 @@
         select  order.id,order.update_time updateTime,deadline,destination,delivery_point_id deliveryPointId,
         type,fee,remark,pick_code pickCode,pick_name pickName,tail_number tailNumber
         from `order`,`order_status`
-        where order.id = order_status.order_id and status = 1
+        where order.id = order_status.order_id and status = 1 and deadline > DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%S')
     </select>
     <!--根据快递点查找可接订单-->
     <select id="selectAcceptableOrderByPoint" parameterType="Integer" resultType="com.fehead.sustdelivery.dataobject.OrderDO">
         select  order.id,order.update_time updateTime,deadline,destination,delivery_point_id deliveryPointId,
         type,fee,remark,pick_code pickCode,pick_name pickName,tail_number tailNumber
         from `order`,`order_status`
-        where order.id = order_status.order_id and status = 1 and order.delivery_point_id = #{point}
+        where order.id = order_status.order_id and status = 1 and order.delivery_point_id = #{point} and deadline > DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%S')
     </select>
     <!--根据目的地模糊查找可接订单-->
     <select id="selectAcceptableOrderByDestination" parameterType="String" resultType="com.fehead.sustdelivery.dataobject.OrderDO">

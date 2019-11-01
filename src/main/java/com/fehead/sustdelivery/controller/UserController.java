@@ -88,6 +88,13 @@ public class UserController extends BaseController{
     }
 
 
+    /**
+     * 关键字查询所有可接订单
+     * @param search
+     * @param page
+     * @param pagesize
+     * @return
+     */
     @PostMapping("/order/lists")
     public List<OrderModel> getAcceptableOrderByDestination(@RequestParam("search") String search,
                                                             @RequestParam("page") Integer page,
